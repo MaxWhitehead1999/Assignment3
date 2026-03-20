@@ -4,57 +4,68 @@ using Microsoft.AspNetCore.Mvc;
 namespace Assignment3.Controllers
 {
     [ApiController]
-    public class PrfoviderController : Controller
+    [Route("api/[controller]")]
+    public class ProviderController : ControllerBase
     {
+        private static List<Provider> ListProviders = new List<Provider>();
 
-        private static List<Patient> Provider = new List<Provider>();
-
-        // Create Provider Record
-
+        // Create Provider Record 
         [HttpPost]
-        public IActionResult CreateProvider([Provider provider)
+        public IActionResult CreateProvider([FromBody] Provider provider)
         {
-            if (provider == null)
+            if(provider == null)
             {
                 return BadRequest();
             }
-
             provider.Id = Guid.NewGuid();
             provider.CreationTime = DateTimeOffset.UtcNow;
+            provider.UpdatedTime = DateTimeOffset.UtcNow;
 
-            providers.Add(provider);
+            ListProviders.Add(provider);
 
             return CreatedAtAction(nameof(GetProvider), new { providerId = provider.Id }, provider);
         }
+
 
         // Recieves a single provider record by id
-
         [HttpGet("{Providerid}")]
-
-        public IActionResult getProvider(Guid Providerid)
+        public IActionResult GetProvider(Guid patientId)
         {
-            if (Provider == null)
-            {
-                return BadRequest();
-            }
-            Provider.Add(Provider);
-            return CreatedAtAction(nameof(GetProvider), new { providerId = Provider.Id }, Provider);
-        }
+            var patient = ListProviders.FirstOrDefault(p => p.Id == patientId);
 
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(patient);
+        }
 
         // Updates provider record by provider id
-
         [HttpPut("{providerId}")]
-        public IActionResult UpdateProvider(Guid providerId)
-        {
-            if (provider == null)
-            {
+        public IActionResult UpdateProvider(Guid providerId, [FromBody] Provider updatedProvider) {
+            if (updatedProvider == null) {
                 return BadRequest();
             }
-            provider.Add(providerId);
 
-            return CreatedAtAction(nameof(GetProvider), new { providerId = provider.Id }, provider);
+            var existingProvider = ListProviders.FirstOrDefault(p => p.Id == providerId);
+
+            if (existingProvider == null)
+            {
+                return NotFound();
+            }
+
+            existingProvider.FirstName = UpdateProvider.FirstName;
+            existingProvider.LastName = UpdateProvider.LastName;
+            existingProvider.Address = UpdateProvider.Address;
+            existingProvider.LicenseNumber = UpdateProvider.LicenseNumber;
+            existingProvider.OrganizationName = UpdateProvider.OrganizationName;
+            existingProvider.UpdatedTime = DateTimeOffset.UtcNow;
+
+            return Ok(existingProvider);
         }
+
+        
 
 
         // Retrieves all providers that match the first name provided
