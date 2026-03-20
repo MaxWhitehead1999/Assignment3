@@ -8,6 +8,6 @@ namespace Assignment3.Models
         public int ID { get; set; }
 
         [Required]
-        DateTimeOffset CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
     }
 }

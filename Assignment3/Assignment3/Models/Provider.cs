@@ -8,8 +8,23 @@ namespace Assignment3.Models
     {
 
         [Required]
-        public IUnsignedNumber LicenseNumber { get; set; }
-      
+        [MaxLength(128)]
+        public string FirstName { get; set; }
 
+        [Required]
+        [MaxLength(128)]
+        public string LastName { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string LicenseNumber { get; set; }
+
+        [MaxLength(128)]
+        public string OrganizationName { get; set; }
+
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 }
